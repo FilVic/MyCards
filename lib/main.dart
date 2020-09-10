@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } catch (e) {
       if (e.code == 'PERMISSION_NOT_GRANTED') {
-        _strRes = 'Не разрешен доступ к камере';
+        _strRes = 'Не разрешен доступ к камере.';
       } else {
         _strRes = e.code;
       }

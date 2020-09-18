@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:barcode_scan/barcode_scan.dart';
+import 'Add.dart';
 
-import 'package:flutter/services.dart';
+import 'about.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,31 +33,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _resQR = 'Нажмите кнопку "Scan"';
-  String _strRes = '';
-
   void _setRes() {
-    setState(() {
-      _resQR = _strRes;
-    });
-  }
-
-  Future _scanQR() async {
-    ScanResult _resScan;
-    try {
-      _resScan = await BarcodeScanner.scan();
-      _strRes = _resScan.rawContent;
-      if (_strRes == '') {
-        _strRes = 'Не отсканирован код.';
-      }
-    } catch (e) {
-      if (e.code == 'PERMISSION_NOT_GRANTED') {
-        _strRes = 'Не разрешен доступ к камере!';
-      } else {
-        _strRes = e.code;
-      }
-    }
-    _setRes();
+    setState(() {});
   }
 
   @override
@@ -66,24 +43,46 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      drawer: Drawer(
+        child: ListView(
           children: <Widget>[
-            Text(
-              _resQR,
-              style: Theme.of(context).textTheme.headline4,
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text(
+                  'Menu',
+                  style: TextStyle(fontSize: 26),
+                )),
+            ListTile(
+              title: Text('About App'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => AboutPage(),
+                    ));
+              },
+            ),
+            ListTile(
+              title: Text('Add'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => MyAddPage(),
+                    ));
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _scanQR,
-        label: Text("Scan"),
-        icon: Icon(Icons.camera),
-        tooltip: 'Scan QR code',
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[],
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

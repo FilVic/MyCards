@@ -4,6 +4,8 @@ import 'Add.dart';
 
 import 'about.dart';
 
+import 'Card.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -13,12 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Cards'),
     );
   }
 }
@@ -32,8 +33,14 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+List<MyCard> cardsList = new List();
+
+void addCard(MyCard _card) {
+  cardsList.add(_card);
+}
+
 class _MyHomePageState extends State<MyHomePage> {
-  void _setRes() {
+  void _setCardsList() {
     setState(() {});
   }
 
@@ -55,34 +62,40 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(fontSize: 26),
                 )),
             ListTile(
-              title: Text('About App'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => AboutPage(),
-                    ));
-              },
-            ),
-            ListTile(
               title: Text('Add'),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                MyCard res = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => MyAddPage(),
                     ));
+                if (res is MyCard) {
+                  cardsList.add(res);
+                }
+                setState(() {});
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('About App'),
+              onTap: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => AboutPage(),
+                    ));
+                Navigator.pop(context);
               },
             ),
           ],
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
-        ),
-      ),
+      body: ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: cardsList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return cardsList[index].getCardWidget();
+          }),
     );
   }
 }
